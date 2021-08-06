@@ -1,0 +1,96 @@
+--[[
+	ChatPrint Improved - Originally made by Dr. Matt
+	Rewritten by StyledStrike
+]]
+
+if SERVER then
+	util.AddNetworkString("chatprint.print")
+end
+
+E2Lib.RegisterExtension("chatprint", true)
+
+local CHAT_PRINT_MAX_CHARS = 300
+
+local function canPrint(ply, text)
+	if hook.Run("ChatPrintAccess", ply, text) == "allow" then
+		return true
+	end
+
+	return false
+end
+
+local function ChatPrint(author, target, ...)
+	-- maybe the author left the game...
+	if not IsValid(author) then return end
+
+	local args = {...}
+
+	if #args < 1 then return end
+
+	if IsValid(target) and not target:IsPlayer() then
+		error("Target entity on chatPrint is not a player!")
+		return
+	end
+
+	local onlyText = ""
+	local filteredArgs = {}
+
+	for _, v in ipairs(args) do
+		if type(v) == "string" then
+			onlyText = onlyText .. v
+			table.insert(filteredArgs, v)
+
+		elseif type(v) == "table" and isnumber(v[1]) and isnumber(v[2]) and isnumber(v[3]) then
+			table.insert(filteredArgs, Color(v[1], v[2], v[3]))
+		end
+	end
+
+	if string.len(onlyText) == 0 then
+		error("chatPrint content has no text!")
+		return
+	elseif string.len(onlyText) > CHAT_PRINT_MAX_CHARS then
+		error("chatPrint content was too big! (Max. " .. CHAT_PRINT_MAX_CHARS .. " characters)")
+		return
+	end
+
+	if not canPrint(author, onlyText) then return end
+
+	local argStr = util.TableToJSON(filteredArgs)
+	local argLen = string.len(argStr)
+
+	net.Start("chatprint.print", false)
+	net.WriteEntity(author)
+	net.WriteUInt(argLen, 16)
+	net.WriteData(argStr, argLen)
+
+	if IsValid(target) then
+		net.Send(target)
+	else
+		net.Broadcast()
+	end
+end
+
+--------------------------------------------------------------------------------
+__e2setcost(5)
+
+e2function number canChatPrint()
+	return canPrint(self.player, "canPrint") and 1 or 0
+end
+
+__e2setcost(50)
+
+e2function void chatPrint(...)
+	ChatPrint(self.player, nil, ...)
+end
+
+e2function void chatPrint(entity ply, ...)
+	ChatPrint(self.player, ply, ...)
+end
+
+e2function void chatPrint(array r)
+	ChatPrint(self.player, nil, unpack(r))
+end
+
+e2function void chatPrint(entity ply, array r)
+	ChatPrint(self.player, ply, unpack(r))
+end
