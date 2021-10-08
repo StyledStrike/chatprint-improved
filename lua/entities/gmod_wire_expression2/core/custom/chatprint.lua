@@ -11,12 +11,20 @@ E2Lib.RegisterExtension("chatprint", true)
 
 local CHAT_PRINT_MAX_CHARS = 300
 
+-- Keep track of when players can print again
+local nextPrint = WireLib.RegisterPlayerTable()
+
 local function canPrint(ply, text)
-	if hook.Run("ChatPrintAccess", ply, text) == "allow" then
-		return true
+	if hook.Run("ChatPrintAccess", ply, text) == "deny" then
+		return false
 	end
 
-	return false
+	local now, nex = RealTime(), nextPrint[ply] or 0
+	if now < nex then
+		return false
+	end
+
+	return true
 end
 
 local function ChatPrint(author, target, ...)
@@ -54,6 +62,8 @@ local function ChatPrint(author, target, ...)
 	end
 
 	if not canPrint(author, onlyText) then return end
+
+	nextPrint[author] = RealTime() + 0.5
 
 	local argStr = util.TableToJSON(filteredArgs)
 	local argLen = string.len(argStr)
