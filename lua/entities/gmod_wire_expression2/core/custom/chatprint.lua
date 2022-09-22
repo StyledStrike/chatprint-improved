@@ -11,6 +11,12 @@ E2Lib.RegisterExtension("chatprint", true)
 
 local CHAT_PRINT_MAX_CHARS = 300
 
+local COLOR_TYPES = {
+	["table"] = true,
+	["Color"] = true,
+	["Vector"] = true
+}
+
 -- Keep track of when players can print again
 local nextPrint = WireLib.RegisterPlayerTable()
 
@@ -48,7 +54,7 @@ local function ChatPrint(author, target, ...)
 			onlyText = onlyText .. v
 			table.insert(filteredArgs, v)
 
-		elseif type(v) == "table" and isnumber(v[1]) and isnumber(v[2]) and isnumber(v[3]) then
+		elseif COLOR_TYPES[type(v)] and isnumber(v[1]) and isnumber(v[2]) and isnumber(v[3]) then
 			table.insert(filteredArgs, Color(v[1], v[2], v[3]))
 		end
 	end
