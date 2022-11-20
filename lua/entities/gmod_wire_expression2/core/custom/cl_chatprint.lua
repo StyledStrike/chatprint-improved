@@ -1,5 +1,5 @@
-E2Helper.Descriptions["canChatPrint"] = "Returns 1 if you have the permission AND have waited long enough to print to chat."
-E2Helper.Descriptions["chatPrint(...)"] = "Prints all text, using the colors (as vectors, if provided), in everyone's chat."
-E2Helper.Descriptions["chatPrint(e...)"] = "Prints all text, using the colors (as vectors, if provided), in E's chat."
-E2Helper.Descriptions["chatPrint(r)"] = "Prints all text and colors (as vectors, if provided) of the array in everyone's chat."
-E2Helper.Descriptions["chatPrint(er)"] = "Prints all text and colors (as vectors, if provided) of the array in E's chat."
+E2Helper.Descriptions['canChatPrint'] = 'Returns 1 if you have the permission AND have waited long enough to print to chat.'
+E2Helper.Descriptions['chatPrint(...)'] = 'Prints all text, using the colors (as vectors, if provided), in everyone\'s chat.'
+E2Helper.Descriptions['chatPrint(e...)'] = 'Prints all text, using the colors (as vectors, if provided), in E\'s chat.'
+E2Helper.Descriptions['chatPrint(r)'] = 'Prints all text and colors (as vectors, if provided) of the array in everyone\'s chat.'
+E2Helper.Descriptions['chatPrint(er)'] = 'Prints all text and colors (as vectors, if provided) of the array in E\'s chat.'
