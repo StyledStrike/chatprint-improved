@@ -4,17 +4,17 @@
 ]]
 
 if SERVER then
-    util.AddNetworkString( 'chatprint.print' )
+    util.AddNetworkString( "chatprint.print" )
 end
 
-E2Lib.RegisterExtension( 'chatprint', true )
+E2Lib.RegisterExtension( "chatprint", true )
 
 local MAX_CHARACTERS = 300
 
 local VALID_COLOR_TYPES = {
-    ['table'] = true,
-    ['Color'] = true,
-    ['Vector'] = true
+    ["table"] = true,
+    ["Color"] = true,
+    ["Vector"] = true
 }
 
 local function IsValidColor( v )
@@ -31,7 +31,7 @@ end
 local nextPrint = WireLib.RegisterPlayerTable()
 
 local function canPrint( ply, text )
-    if hook.Run( 'ChatPrintAccess', ply, text ) == 'deny' then
+    if hook.Run( "ChatPrintAccess", ply, text ) == "deny" then
         return false
     end
 
@@ -52,16 +52,16 @@ local function ChatPrint( author, target, ... )
     if #args < 1 then return end
 
     if IsValid( target ) and not target:IsPlayer() then
-        error( 'Target entity on chatPrint is not a player!' )
+        error( "Target entity on chatPrint is not a player!" )
 
         return
     end
 
-    local onlyText = ''
+    local onlyText = ""
     local filteredArgs = {}
 
     for _, v in ipairs( args ) do
-        if type( v ) == 'string' then
+        if type( v ) == "string" then
             onlyText = onlyText .. v
             filteredArgs[#filteredArgs + 1] = v
 
@@ -71,12 +71,12 @@ local function ChatPrint( author, target, ... )
     end
 
     if string.len( onlyText ) == 0 then
-        error( 'chatPrint content has no text!' )
+        error( "chatPrint content has no text!" )
 
         return
 
     elseif string.len( onlyText ) > MAX_CHARACTERS then
-        error( 'chatPrint content was too big! (Max. ' .. MAX_CHARACTERS .. ' characters)' )
+        error( "chatPrint content was too big! (Max. " .. MAX_CHARACTERS .. " characters)" )
 
         return
     end
@@ -88,7 +88,7 @@ local function ChatPrint( author, target, ... )
     local argStr = util.TableToJSON( filteredArgs )
     local argLen = string.len( argStr )
 
-    net.Start( 'chatprint.print', false )
+    net.Start( "chatprint.print", false )
     net.WriteEntity( author )
     net.WriteUInt( argLen, 16 )
     net.WriteData( argStr, argLen )
@@ -104,7 +104,7 @@ end
 __e2setcost( 5 )
 
 e2function number canChatPrint()
-    return canPrint( self.player, 'canPrint' ) and 1 or 0
+    return canPrint( self.player, "canPrint" ) and 1 or 0
 end
 
 __e2setcost( 50 )
