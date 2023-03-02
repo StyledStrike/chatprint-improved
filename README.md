@@ -26,18 +26,19 @@ Cost | Function				| Description
 50   | chatPrint(r)			| Prints all text and colors (as vectors, if provided) of the array on everyone's chat.
 50   | chatPrint(e,r)		| Prints all text and colors (as vectors, if provided) of the array on E's chat.
 
-### Example
+### Examples
 
 ```perl
-@name ChatPrintTest
-
 # Red 'Hello', green 'world' and blue '!'
 chatPrint(vec(255,0,0), "Hello", vec(0,255,0), " world!", vec(0,0,255), "!")
+```
 
+```perl
 # Print "bingus..." only for the chip owner
 chatPrint(owner(), "bingus...")
+```
 
-
+```perl
 # You can use a array to store the message contents
 Contents = array(vec(255, 255, 0), "Mornin' Dew!")
 
@@ -53,12 +54,12 @@ chatPrint(owner(), Contents)
 You can override/complement the built-in access check using the `ChatPrintAccess` hook.
 
 ```lua
-hook.Add("ChatPrintAccess", "override_charprint_access", function(ply, text)
+hook.Add( "ChatPrintAccess", "override_charprint_access", function( ply, text )
 	-- Do your own checks here. Returning anything other than "allow" blocks chatprint.
 
-	-- Example: no more "bingus"!
-	if string.find(text, "bingus") then
+	-- Example: block messages containing the word "bingus"
+	if string.find( text, "bingus" ) then
 		return "deny"
 	end
-end)
+end )
 ```
